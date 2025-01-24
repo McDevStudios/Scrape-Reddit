@@ -1,0 +1,156 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Reddit Media Scraper</title>
+    <link rel="stylesheet" href="{{ url_for('static', path='/styles.css') }}">
+</head>
+<body>
+    <div class="container">
+        <h1>Reddit Media Scraper</h1>
+        <form id="scrapeForm">
+            <div class="form-group">
+                <label for="reddit_url">Reddit URL:</label>
+                <input type="text" id="reddit_url" name="reddit_url" required 
+                       placeholder="https://reddit.com/r/subreddit">
+            </div>
+
+            <div class="form-group">
+                <label for="sort_by">Sort By:</label>
+                <select id="sort_by" name="sort_by" required>
+                    <option value="hot">Hot</option>
+                    <option value="new">New</option>
+                    <option value="top">Top</option>
+                    <option value="rising">Rising</option>
+                </select>
+            </div>
+
+            <div class="form-group">
+                <label for="post_limit">Number of Posts:</label>
+                <select id="post_limit" name="post_limit" required>
+                    <option value="5">5 posts</option>
+                    <option value="10" selected>10 posts</option>
+                    <option value="15">15 posts</option>
+                    <option value="20">20 posts</option>
+                    <option value="25">25 posts</option>
+                    <option value="30">30 posts</option>
+                </select>
+            </div>
+
+            <div class="download-section">
+                <button type="submit">Download Media</button>
+                <div class="info-box">
+                    <span class="info-icon">ℹ️</span>
+                    <div class="info-content">
+                        <h4>Download Limits</h4>
+                        <p>Maximum 30 posts per request due to Reddit's rate limiting (30 requests/minute).</p>
+                        <p>This helps ensure:</p>
+                        <ul>
+                            <li>Reliable downloads</li>
+                            <li>Faster processing</li>
+                            <li>Compliance with Reddit's API rules</li>
+                        </ul>
+                    </div>
+                </div>
+            </div>
+        </form>
+
+        <div id="progress-box" style="display: none;">
+            <div class="progress-header">
+                <span id="status-text">Scraping media files... Please wait.</span>
+                <div class="progress-counts">
+                    <span>Posts: <span id="post-count">0/0</span></span>
+                    <span>Files: <span id="file-count">0</span></span>
+                </div>
+            </div>
+            <div class="progress-bar">
+                <div id="progress-fill"></div>
+            </div>
+        </div>
+    </div>
+
+    <script>
+        let isProcessing = false;
+        let statusInterval;
+
+        // Validate and clean Reddit URL
+        function validateRedditUrl(url) {
+            const validSorts = ['hot', 'new', 'top', 'rising'];
+            url = url.trim().toLowerCase();
+            
+            // Remove any existing sort from the URL
+            validSorts.forEach(sort => {
+                url = url.replace(new RegExp(`/${sort}/?$`), '');
+            });
+            
+            // Remove trailing slash
+            url = url.replace(/\/$/, '');
+            
+            return url;
+        }
+
+        document.getElementById('reddit_url').addEventListener('blur', function(e) {
+            e.target.value = validateRedditUrl(e.target.value);
+        });
+
+        function updateProgress() {
+            fetch('/status')
+                .then(response => response.json())
+                .then(data => {
+                    const postLimit = document.getElementById('post_limit').value;
+                    document.getElementById('post-count').textContent = `${data.posts_processed}/${postLimit}`;
+                    document.getElementById('file-count').textContent = data.files_found;
+                    
+                    const percentage = Math.min((data.posts_processed / postLimit) * 100, 100);
+                    document.getElementById('progress-fill').style.width = `${percentage}%`;
+                });
+        }
+
+        document.getElementById('scrapeForm').addEventListener('submit', async (e) => {
+            e.preventDefault();
+            if (isProcessing) return;
+            
+            isProcessing = true;
+            const progressBox = document.getElementById('progress-box');
+            progressBox.style.display = 'block';
+            
+            statusInterval = setInterval(updateProgress, 500);
+
+            try {
+                const response = await fetch('/scrape', {
+                    method: 'POST',
+                    body: new FormData(e.target)
+                });
+
+                clearInterval(statusInterval);
+                
+                if (response.ok) {
+                    const blob = await response.blob();
+                    const url = window.URL.createObjectURL(blob);
+                    const a = document.createElement('a');
+                    a.href = url;
+                    a.download = response.headers.get('Content-Disposition').split('filename=')[1].replace(/"/g, '');
+                    document.body.appendChild(a);
+                    a.click();
+                    window.URL.revokeObjectURL(url);
+                    a.remove();
+                    
+                    document.getElementById('progress-fill').classList.add('complete');
+                    document.getElementById('status-text').textContent = 'Download complete!';
+                } else {
+                    const error = await response.json();
+                    document.getElementById('status-text').textContent = `Error: ${error.message}`;
+                    document.getElementById('progress-fill').classList.add('error');
+                }
+            } catch (error) {
+                clearInterval(statusInterval);
+                document.getElementById('status-text').textContent = `Error: ${error.message}`;
+                document.getElementById('progress-fill').classList.add('error');
+            } finally {
+                isProcessing = false;
+            }
+        });
+    </script>
+</body>
+</html> 
