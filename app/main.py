@@ -66,4 +66,8 @@ async def scrape(
         return JSONResponse(
             content={"status": "error", "message": str(e)},
             status_code=500
-        ) 
+        )
+
+@app.get("/status")
+async def get_status():
+    return JSONResponse(content=scraper.progress) 

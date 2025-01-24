@@ -43,30 +43,24 @@
                 <div class="info-box">
                     <span class="info-icon">ℹ️</span>
                     <div class="info-content">
-                        <h4>Download Limits</h4>
-                        <p>Maximum 30 posts per request due to Reddit's rate limiting (30 requests/minute).</p>
-                        <p>This helps ensure:</p>
+                        <h4>Download Information</h4>
+                        <p>The post limit determines the number of Reddit posts that will be processed, not the total number of media files.</p>
+                        <p>For example, a single post might contain:</p>
                         <ul>
-                            <li>Reliable downloads</li>
-                            <li>Faster processing</li>
-                            <li>Compliance with Reddit's API rules</li>
+                            <li>Multiple images from a gallery post</li>
+                            <li>Both images and videos</li>
+                            <li>Multiple embedded media items</li>
                         </ul>
+                        <p>So requesting 5 posts might result in more than 5 files being downloaded if the posts contain multiple media items.</p>
+                        <p><strong>Note:</strong> Maximum 30 posts per request due to Reddit's rate limiting.</p>
                     </div>
                 </div>
             </div>
         </form>
 
         <div id="progress-box" style="display: none;">
-            <div class="progress-header">
-                <span id="status-text">Scraping media files... Please wait.</span>
-                <div class="progress-counts">
-                    <span>Posts: <span id="post-count">0/0</span></span>
-                    <span>Files: <span id="file-count">0</span></span>
-                </div>
-            </div>
-            <div class="progress-bar">
-                <div id="progress-fill"></div>
-            </div>
+            <div class="loading-spinner"></div>
+            <div id="status-text">Downloading media files...</div>
         </div>
     </div>
 
@@ -98,12 +92,35 @@
             fetch('/status')
                 .then(response => response.json())
                 .then(data => {
-                    const postLimit = document.getElementById('post_limit').value;
+                    const postLimit = parseInt(document.getElementById('post_limit').value);
+                    const progressBox = document.getElementById('progress-box');
+                    const progressFill = document.getElementById('progress-fill');
+                    const statusText = document.getElementById('status-text');
+                    
+                    // Show progress box
+                    progressBox.style.display = 'block';
+                    
+                    // Update counts
                     document.getElementById('post-count').textContent = `${data.posts_processed}/${postLimit}`;
                     document.getElementById('file-count').textContent = data.files_found;
                     
-                    const percentage = Math.min((data.posts_processed / postLimit) * 100, 100);
-                    document.getElementById('progress-fill').style.width = `${percentage}%`;
+                    // Calculate and update progress bar
+                    const percentage = (data.posts_processed / postLimit) * 100;
+                    progressFill.style.width = `${percentage}%`;
+                    
+                    // Update status text
+                    if (data.current_action) {
+                        statusText.textContent = data.current_action;
+                    }
+                    
+                    // Handle completion
+                    if (data.posts_processed >= postLimit) {
+                        progressFill.classList.add('complete');
+                    }
+                })
+                .catch(error => {
+                    console.error('Error fetching status:', error);
+                    clearInterval(statusInterval);
                 });
         }
 
@@ -113,18 +130,19 @@
             
             isProcessing = true;
             const progressBox = document.getElementById('progress-box');
-            progressBox.style.display = 'block';
+            const statusText = document.getElementById('status-text');
             
-            statusInterval = setInterval(updateProgress, 500);
+            // Show loading spinner
+            progressBox.style.display = 'block';
+            statusText.textContent = 'Downloading media files...';
 
             try {
+                const formData = new FormData(e.target);
                 const response = await fetch('/scrape', {
                     method: 'POST',
-                    body: new FormData(e.target)
+                    body: formData
                 });
 
-                clearInterval(statusInterval);
-                
                 if (response.ok) {
                     const blob = await response.blob();
                     const url = window.URL.createObjectURL(blob);
@@ -136,17 +154,17 @@
                     window.URL.revokeObjectURL(url);
                     a.remove();
                     
-                    document.getElementById('progress-fill').classList.add('complete');
-                    document.getElementById('status-text').textContent = 'Download complete!';
+                    // Show success message
+                    statusText.textContent = 'Download complete!';
+                    setTimeout(() => {
+                        progressBox.style.display = 'none';
+                    }, 2000);
                 } else {
                     const error = await response.json();
-                    document.getElementById('status-text').textContent = `Error: ${error.message}`;
-                    document.getElementById('progress-fill').classList.add('error');
+                    statusText.textContent = `Error: ${error.message}`;
                 }
             } catch (error) {
-                clearInterval(statusInterval);
-                document.getElementById('status-text').textContent = `Error: ${error.message}`;
-                document.getElementById('progress-fill').classList.add('error');
+                statusText.textContent = `Error: ${error.message}`;
             } finally {
                 isProcessing = false;
             }
