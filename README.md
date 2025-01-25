@@ -74,14 +74,14 @@ This FastAPI-based web application allows users to:
    ```
 
 3. Access the application:
-   - Open your browser and navigate to `http://localhost:8000`
+   - Open your browser and navigate to `http://localhost:8080`
 
 ### Configuration
-- The application runs on port `8000` by default
+- The application runs on port `8080` by default
 - Configure the port in `docker-compose.yml` if needed
 - Downloads are stored in the `downloads` directory
 
-## Usage
+### Usage
 1. Enter a valid Reddit URL (e.g., https://reddit.com/r/subreddit)
 2. Select sorting method (Hot, New, Rising, or Top with time period)
 3. Choose number of posts to process (5-30)
@@ -89,23 +89,6 @@ This FastAPI-based web application allows users to:
 5. Wait for processing and download the ZIP file
 
 ## Development
-
-### Project Structure
-```
-├── app/
-│   ├── static/
-│   │   └── styles.css          # Application styling
-│   │   └── templates/
-│   │       └── index.html          # Main application template
-│   │   └── main.py                 # FastAPI application entry point
-│   │   └── scraper.py              # Reddit scraping implementation
-├── docker-compose.yml          # Docker compose configuration
-├── Dockerfile                  # Docker container definition
-├── requirements.txt            # Python dependencies
-├── LICENSE                     # MIT license
-├── README.md                   # Project documentation
-└── roadmap.md                  # Development roadmap
-```
 
 The application follows a simple, modular structure:
 - `app/`: Contains all application code
@@ -118,23 +101,6 @@ The application follows a simple, modular structure:
 ## Extras
 - Enhanced styling with CSS frameworks
 - Data export/import in CSV format
-
-### Running Locally
-1. Create a virtual environment:
-   ```bash
-   python -m venv venv
-   source venv/bin/activate  # or `venv\Scripts\activate` on Windows
-   ```
-
-2. Install dependencies:
-   ```bash
-   pip install -r requirements.txt
-   ```
-
-3. Run the application:
-   ```bash
-   uvicorn app.main:app --reload
-   ```
 
 ## License
 This project is licensed under the MIT License - see the [LICENSE](LICENSE) file for details. 
