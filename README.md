@@ -5,17 +5,9 @@ A lightweight web application for downloading media content from Reddit posts.
 - [Overview](#overview)
 - [Tech Stack](#tech-stack)
 - [Features](#features)
-  - [1. Web Interface](#1-web-interface)
-  - [2. Media Scraping](#2-media-scraping)
-  - [3. Progress Tracking](#3-progress-tracking)
 - [Setup and Deployment](#setup-and-deployment)
-  - [Prerequisites](#prerequisites)
-  - [Installation](#installation)
-  - [Configuration](#configuration)
 - [Usage](#usage)
 - [Development](#development)
-  - [Project Structure](#project-structure)
-  - [Running Locally](#running-locally)
 - [License](#license)
 
 ## Overview
