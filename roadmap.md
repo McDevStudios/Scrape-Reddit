@@ -1,6 +1,13 @@
 # Scrape Reddit
 A lightweight web application for scraping media content from Reddit posts.
 
+## Table of Contents
+- [Overview](#overview)
+- [Tech Stack](#tech-stack)
+- [Features](#features)
+- [Development Phases](#development-phases)
+- [Notes](#notes)
+
 ## Overview
 A containerized web app that allows users to:
 1. **Input Reddit URLs**: Paste subreddit URLs and configure scraping parameters
