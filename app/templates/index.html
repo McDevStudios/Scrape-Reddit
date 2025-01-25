@@ -21,8 +21,13 @@
                 <select id="sort_by" name="sort_by" required>
                     <option value="hot">Hot</option>
                     <option value="new">New</option>
-                    <option value="top">Top</option>
                     <option value="rising">Rising</option>
+                    <option value="top/now">Top: Now</option>
+                    <option value="top/today">Top: Today</option>
+                    <option value="top/week">Top: This Week</option>
+                    <option value="top/month">Top: This Month</option>
+                    <option value="top/year">Top: This Year</option>
+                    <option value="top/all">Top: All Time</option>
                 </select>
             </div>
 
@@ -45,6 +50,12 @@
                     <div class="info-content">
                         <h4>Download Information</h4>
                         <p>The post limit determines the number of Reddit posts that will be processed, not the total number of media files.</p>
+                        <p>Supported media types:</p>
+                        <ul>
+                            <li>Images: .jpg, .jpeg, .png, .webp</li>
+                            <li>Animated: .gif</li>
+                            <li>Video: .mp4, .webm</li>
+                        </ul>
                         <p>For example, a single post might contain:</p>
                         <ul>
                             <li>Multiple images from a gallery post</li>

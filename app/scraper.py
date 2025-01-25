@@ -22,6 +22,7 @@ class RedditScraper:
             "files_found": 0,
             "current_action": "Initializing..."
         }
+        self.SUPPORTED_EXTENSIONS = ['.jpg', '.jpeg', '.png', '.gif', '.mp4', '.webm', '.webp']
         
     def _create_export_directory(self, export_path):
         """Create export directory if it doesn't exist"""
@@ -35,13 +36,22 @@ class RedditScraper:
     def _get_json_url(self, url: str, sort_by: str, after: str = None) -> str:
         """Convert Reddit URL to JSON endpoint with proper limit"""
         url = url.rstrip('/')
-        if not url.endswith(f'/{sort_by}'):
-            url = f'{url}/{sort_by}'
         
-        params = {
-            'raw_json': 1,
-            'limit': 25  # Reddit's default limit per request
-        }
+        # Handle top sorting with time periods
+        if sort_by.startswith('top/'):
+            time_period = sort_by.split('/')[1]
+            url = f'{url}/top'
+            params = {
+                'raw_json': 1,
+                'limit': 25,  # Reddit's default limit per request
+                't': time_period  # time period for top sorting
+            }
+        else:
+            url = f'{url}/{sort_by}'
+            params = {
+                'raw_json': 1,
+                'limit': 25  # Reddit's default limit per request
+            }
         
         if after:
             params['after'] = after
@@ -68,7 +78,7 @@ class RedditScraper:
         if 'url' in post_data:
             url = post_data['url']
             # Handle direct media links
-            if any(url.endswith(ext) for ext in ['.jpg', '.jpeg', '.png', '.gif', '.mp4', '.webm']):
+            if any(url.endswith(ext) for ext in self.SUPPORTED_EXTENSIONS):
                 media_urls.add(url)
                 self.logger.info(f"Found direct media URL: {url}")
             # Handle imgur links
