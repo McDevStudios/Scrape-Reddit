@@ -69,7 +69,7 @@ This FastAPI-based web application allows users to:
    ```
 
 3. Access the application:
-   - Open your browser and navigate to `http://localhost:8080`.
+   - Open your browser and navigate to `http://localhost:8080`
 
 ### Configuration
 - The application runs on port `8080` by default.
