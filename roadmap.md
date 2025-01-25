@@ -1,95 +1,105 @@
-# Reddit Media Scraper
+# Scrape Reddit
 A lightweight web application for scraping media content from Reddit posts.
 
 ## Overview
 A containerized web app that allows users to:
 1. **Input Reddit URLs**: Paste subreddit URLs and configure scraping parameters
-2. **Download Media**: Automatically download images, videos, GIFs, and links from posts
-3. **Export**: Save media to user-specified local directories
+2. **Download Media**: Automatically download images, videos, and GIFs from posts
+3. **Export**: Package downloaded media into convenient ZIP archives
 
 ## Tech Stack
-- **Frontend & Backend**: Python with FastAPI (single service)
-- **Infrastructure**: Single Docker container
+- **Frontend**: HTML, CSS, JavaScript
+- **Backend**: Python with FastAPI
+- **Infrastructure**: Docker container
 - **Key Libraries**: 
-  - PRAW (Python Reddit API Wrapper)
-  - FastAPI
-  - Jinja2 (for templating)
-  - aiofiles (for async file operations)
+  - FastAPI (web framework)
+  - BeautifulSoup4 (HTML parsing)
+  - Requests (HTTP client)
+  - Jinja2 (templating)
 
 ## Features
 
 ### 1. Web Interface
-- Simple HTML form with:
+- Clean HTML form with:
   - Reddit URL input field
-  - Sorting options (Top/Hot/New)
-  - Post limit selector
-  - Export directory path input
-  - Submit button
-- Real-time feedback on scraping progress
+  - Sorting options (Hot/New/Rising/Top)
+  - Post limit selector (5-30 posts)
+  - Download button
+  - Info tooltip
+- Real-time progress tracking
+- Responsive design
+- Error handling and feedback
 
 ### 2. Scraping Engine
-- Utilizes PRAW for Reddit API interaction
+- Direct Reddit JSON API interaction
 - Supports downloading:
-  - Images (jpg, png, etc.)
-  - Videos
+  - Images (jpg, jpeg, png, webp)
+  - Videos (mp4, webm)
   - GIFs
-  - Links (saved as text files)
-- Handles rate limiting and API compliance
+- Handles various content types:
+  - Direct media links
+  - Gallery posts
+  - Crossposted content
+  - Reddit-hosted media
+  - Imgur links
+- Built-in rate limiting
 
 ### 3. File Management
-- Creates organized directory structure
-- Validates file paths
-- Handles duplicate files
-- Maintains original filenames when possible
+- ZIP archive creation
+- Unique filename generation
+- Content-type detection
+- Progress tracking during compression
 
 ### 4. Containerized Architecture
 - **Single Container**:
-  - Runs Python FastAPI application
-  - Handles both web interface and scraping logic
-  - Manages file system operations
-  - Maps local storage volume for downloads
+  - FastAPI application server
+  - Static file serving
+  - Media processing
+  - ZIP compression
 
 ---
 
 ## Development Phases
 
-### Phase 1: Core Setup
+### Phase 1: Core Setup ✓
 1. **Application Structure**
-   - Set up FastAPI application
-   - Create basic HTML template
-   - Configure Docker container
-   - Set up Reddit API authentication
+   - FastAPI application setup
+   - HTML template creation
+   - Docker configuration
+   - Static file serving
 
 2. **Scraping Logic**
-   - Implement PRAW connection
-   - Create media detection functions
-   - Build download handlers
-   - Add sorting and limit functionality
+   - Reddit JSON API integration
+   - Media URL extraction
+   - Content type detection
+   - Download handling
 
-3. **File System Operations**
-   - Implement directory creation
-   - Add file saving logic
-   - Handle path validation
-   - Manage file naming conflicts
+3. **File Operations**
+   - ZIP archive creation
+   - Progress tracking
+   - Error handling
+   - Content streaming
 
-### Phase 2: Web Interface
-- Build simple HTML form
-- Add basic CSS styling
-- Implement form validation
-- Create progress feedback mechanism
-- Add error handling and user notifications
+### Phase 2: Web Interface ✓
+- Responsive HTML/CSS design
+- Real-time progress updates
+- Form validation
+- Error messaging
+- Loading indicators
+- Info tooltips
 
-### Phase 3: Deployment
-- Dockerfile configuration
-- Volume mapping for downloads
-- Environment variable setup
-- Documentation for deployment
-- Testing on different platforms
+### Phase 3: Deployment ✓
+- Docker container configuration
+- Environment setup
+- Port mapping
+- Documentation
+- License
 
 ---
 
 ## Notes
 - Application prioritizes simplicity and efficiency
-- Single container architecture reduces complexity
-- No database needed as files are stored directly in the file system
-- FastAPI provides good performance for both web serving and async operations
+- No authentication required for basic Reddit scraping
+- Uses Reddit's JSON API instead of PRAW for lighter dependencies
+- FastAPI provides both async capabilities and web serving
+- Real-time progress updates via polling

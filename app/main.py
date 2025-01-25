@@ -6,7 +6,7 @@ import io
 import zipfile
 from .scraper import RedditScraper
 
-app = FastAPI(title="Reddit Media Scraper")
+app = FastAPI(title="Scrape Reddit")
 
 # Mount static files
 app.mount("/static", StaticFiles(directory="app/static"), name="static")
