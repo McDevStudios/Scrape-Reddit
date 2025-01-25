@@ -1,6 +1,23 @@
 # Scrape Reddit
 A lightweight web application for downloading media content from Reddit posts.
 
+## Table of Contents
+- [Overview](#overview)
+- [Tech Stack](#tech-stack)
+- [Features](#features)
+  - [1. Web Interface](#1-web-interface)
+  - [2. Media Scraping](#2-media-scraping)
+  - [3. Progress Tracking](#3-progress-tracking)
+- [Setup and Deployment](#setup-and-deployment)
+  - [Prerequisites](#prerequisites)
+  - [Installation](#installation)
+  - [Configuration](#configuration)
+- [Usage](#usage)
+- [Development](#development)
+  - [Project Structure](#project-structure)
+  - [Running Locally](#running-locally)
+- [License](#license)
+
 ## Overview
 This FastAPI-based web application allows users to:
 1. **Input Reddit URLs**: Enter subreddit URLs and configure sorting/post limits
@@ -90,11 +107,11 @@ This FastAPI-based web application allows users to:
 │   │       └── index.html          # Main application template
 │   │   └── main.py                 # FastAPI application entry point
 │   │   └── scraper.py              # Reddit scraping implementation
-│   ├── docker-compose.yml          # Docker compose configuration
-│   ├── Dockerfile                  # Docker container definition
-│   ├── requirements.txt            # Python dependencies
-│   ├── LICENSE                     # MIT license
-│   └── README.md                   # Project documentation
+├── docker-compose.yml          # Docker compose configuration
+├── Dockerfile                  # Docker container definition
+├── requirements.txt            # Python dependencies
+├── LICENSE                     # MIT license
+├── README.md                   # Project documentation
 └── roadmap.md                  # Development roadmap
 ```
 
