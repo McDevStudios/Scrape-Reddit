@@ -9,6 +9,9 @@
 <body>
     <div class="container">
         <h1>Reddit Media Scraper</h1>
+        <div id="error-message" class="error-box" style="display: none;">
+            <p class="error-text"></p>
+        </div>
         <form id="scrapeForm">
             <div class="form-group">
                 <label for="reddit_url">Reddit URL:</label>
@@ -139,10 +142,22 @@
             e.preventDefault();
             if (isProcessing) return;
             
-            isProcessing = true;
+            const errorBox = document.getElementById('error-message');
             const progressBox = document.getElementById('progress-box');
             const statusText = document.getElementById('status-text');
             
+            // Clear previous errors
+            errorBox.style.display = 'none';
+            
+            // Validate URL
+            const urlInput = document.getElementById('reddit_url');
+            if (!urlInput.value.match(/^https?:\/\/(www\.)?reddit\.com\/r\/[\w-]+\/?/)) {
+                errorBox.style.display = 'block';
+                errorBox.querySelector('.error-text').textContent = 'Please enter a valid Reddit subreddit URL';
+                return;
+            }
+            
+            isProcessing = true;
             // Show loading spinner
             progressBox.style.display = 'block';
             statusText.textContent = 'Downloading media files...';

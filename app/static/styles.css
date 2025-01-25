@@ -294,4 +294,51 @@ button:hover {
     border-style: solid;
     border-color: white transparent transparent;
     filter: drop-shadow(0 2px 2px rgba(0,0,0,0.1));
+}
+
+.error-box {
+    margin: 10px 0;
+    padding: 10px;
+    border-radius: 4px;
+    background-color: #fee;
+    border: 1px solid #fcc;
+    color: #c00;
+    display: none;
+}
+
+/* Disable button during processing */
+button:disabled {
+    background-color: #ccc;
+    cursor: not-allowed;
+}
+
+/* Add responsive design */
+@media (max-width: 600px) {
+    .container {
+        padding: 10px;
+    }
+    
+    .download-section {
+        flex-direction: column;
+    }
+    
+    .info-content {
+        width: 250px;
+        right: -100px;
+    }
+}
+
+/* Add loading state to button */
+button.loading {
+    position: relative;
+    color: transparent;
+}
+
+button.loading::after {
+    content: "Downloading...";
+    position: absolute;
+    left: 50%;
+    top: 50%;
+    transform: translate(-50%, -50%);
+    color: white;
 } 
