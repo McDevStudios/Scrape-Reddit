@@ -20,11 +20,6 @@ This FastAPI-based web application allows users to:
 - **Backend**: Python with FastAPI
 - **Frontend**: HTML, CSS, JavaScript
 - **Infrastructure**: Docker container
-- **Key Libraries**: 
-  - FastAPI
-  - BeautifulSoup4
-  - Requests
-  - Jinja2
 
 ## Features
 
