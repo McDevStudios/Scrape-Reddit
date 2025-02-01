@@ -59,8 +59,8 @@ This FastAPI-based web application allows users to:
 ### Installation
 1. Clone the repository:
    ```bash
-   git clone https://github.com/McDevStudios/Reddit-Media-Scraper.git
-   cd Reddit-Media-Scraper
+   git clone https://github.com/McDevStudios/Scrape-Reddit.git
+   cd Scrape-Reddit
    ```
 
 2. Build and start the container:
